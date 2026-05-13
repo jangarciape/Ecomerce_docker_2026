@@ -69,15 +69,22 @@ pipeline {
             }
         }
 
-        // 📊 Etapa 4: Análisis de calidad con SonarQube
         stage('Sonar Analysis') {
             steps {
                 timeout(time: 10, unit: 'MINUTES') {
-                    echo '📊 === INICIO: ANÁLISIS DE CALIDAD ==='
+
+                    echo '📊 === INICIO: ANÁLISIS SONARQUBE ==='
+
                     withSonarQubeEnv('sonarqube') {
-                        sh 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.9.0.2155:sonar -Pcoverage'
+
+                        sh '''
+                        mvn sonar:sonar \
+                        -Dsonar.projectKey=ecommerce \
+                        -Dsonar.host.url=http://localhost:9000
+                        '''
                     }
-                    echo '✅ === FIN: ANÁLISIS DE CALIDAD COMPLETADO ==='
+
+                    echo '✅ === FIN: ANÁLISIS COMPLETADO ==='
                 }
             }
         }
